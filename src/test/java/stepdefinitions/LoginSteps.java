@@ -1,4 +1,4 @@
-package steps;
+package stepdefinitions;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -23,12 +23,8 @@ public class LoginSteps {
         loginPage.login("standard_user", "secret_sauce");
     }
 
-    @When("I navigate to the home page")
-    public void i_navigate_to_the_home_page() {
-    }
-
-    @Then("I should see the list of product")
-    public void i_should_see_the_list_of_product() {
+    @Then("I should see the home page")
+    public void i_should_see_the_home_page() {
         assertTrue(driver.getCurrentUrl().contains("inventory.html"));
     }
 }
