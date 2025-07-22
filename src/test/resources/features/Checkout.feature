@@ -4,7 +4,8 @@ Feature: Checkout Flow
   So I can receive my products
 
   Scenario: Complete product purchase
-    Given I am logged into the system
+    Given I am on the login page
+    And I login with valid credentials
     When I add product "Sauce Labs Backpack" to cart
     And I access the shopping cart
     And I begin the checkout process

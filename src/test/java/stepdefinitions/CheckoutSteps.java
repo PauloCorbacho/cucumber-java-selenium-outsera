@@ -23,11 +23,6 @@ public class CheckoutSteps {
         this.checkoutPage = new CheckoutPage(driver);
     }
 
-    @Given("I am logged into the system")
-    public void i_am_logged_into_the_system() {
-        // Existing login implementation
-    }
-
     @When("I add product {string} to cart")
     public void i_add_product_to_cart(String productName) {
         productsPage.addProductToCart(productName);

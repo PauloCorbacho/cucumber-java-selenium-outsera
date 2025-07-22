@@ -10,7 +10,7 @@ public class ProductsElements extends BaseElements {
     @FindBy(className = "inventory_item")
     public List<WebElement> products;
 
-    @FindBy(xpath = "//a[contains(@class,'shopping_cart')]")
+    @FindBy(css  = ".shopping_cart_link")
     public WebElement cartIcon;
 
     public ProductsElements(WebDriver driver) {

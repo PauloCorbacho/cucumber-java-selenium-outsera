@@ -3,12 +3,10 @@ package elements;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import java.util.List;
 
 public class CartElements extends BaseElements{
 
-    // Elementos do carrinho
     @FindBy(className = "cart_item")
     public List<WebElement> cartItems;
 
@@ -30,7 +28,7 @@ public class CartElements extends BaseElements{
     @FindBy(id = "continue-shopping")
     public WebElement continueShoppingButton;
 
-    @FindBy(className = "shopping_cart_link")
+    @FindBy(css  = ".shopping_cart_link")
     public WebElement cartIcon;
 
     @FindBy(className = "cart_quantity")
