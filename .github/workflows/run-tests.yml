@@ -1,0 +1,48 @@
+name: Selenium Cucumber Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Set up Chrome
+      uses: browser-actions/setup-chrome@latest
+      
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2-
+
+    - name: Run Tests
+      run: mvn clean verify -Dheadless=true
+
+    - name: Upload HTML Report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: cucumber-report
+        path: target/cucumber-reports.html
+
+    - name: Upload Advanced Report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: cucumber-advanced-report
+        path: target/cucumber-reports/
