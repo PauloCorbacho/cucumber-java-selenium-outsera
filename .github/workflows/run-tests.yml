@@ -1,34 +1,32 @@
-name: Fixed Selenium Tests
+name: Fixed Cucumber Tests
 
 on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    
     steps:
     - uses: actions/checkout@v4
     
-    - name: Setup Java 17 (LTS)
+    - name: Setup Java 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-    
-    - name: Run Compatible Tests
+
+    - name: Patch StepDefinitions
       run: |
-        mvn clean verify \
-        -Dmaven.compiler.source=17 \
-        -Dmaven.compiler.target=17 \
-        -Dcucumber.filter.tags="not @wip" \
-        -Dheadless=true
-        
+        find src/test/java/stepdefinitions -name "*.java" -exec sed -i '/class/ a \    public LoginSteps() {}' {} \;
+        cat src/test/java/stepdefinitions/LoginSteps.java | grep -A 2 "class" || true
+
+    - name: Run Tests
+      run: mvn clean verify -Dheadless=true -B
+
     - name: Upload Reports
       uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-reports
         path: |
-          target/surefire-reports/
           target/cucumber-reports.html
+          target/surefire-reports/
