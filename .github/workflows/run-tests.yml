@@ -8,16 +8,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Setup Java 17
+    - name: Setup Java 17 (LTS)
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Patch StepDefinitions
+    - name: Force Java 17 Compatibility
       run: |
-        find src/test/java/stepdefinitions -name "*.java" -exec sed -i '/class/ a \    public LoginSteps() {}' {} \;
-        cat src/test/java/stepdefinitions/LoginSteps.java | grep -A 2 "class" || true
+        sed -i '/<maven.compiler.source>/!b;n;c\        <maven.compiler.source>17</maven.compiler.source>' pom.xml
+        sed -i '/<maven.compiler.target>/!b;n;c\        <maven.compiler.target>17</maven.compiler.target>' pom.xml
+        sed -i '/<maven.compiler.release>/!b;n;c\        <maven.compiler.release>17</maven.compiler.release>' pom.xml || true
+        cat pom.xml | grep -A 3 "maven.compiler" || true
 
     - name: Run Tests
       run: mvn clean verify -Dheadless=true -B
