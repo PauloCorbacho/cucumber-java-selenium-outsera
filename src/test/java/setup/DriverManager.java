@@ -20,19 +20,17 @@ public class DriverManager {
                 options.addArguments("--disable-gpu");
                 options.addArguments("--no-sandbox");
                 options.addArguments("--disable-dev-shm-usage");
+                options.addArguments("--window-size=1920,1080");
             }
 
-            options.addArguments("--password-store=basic");
-            options.addArguments("--disable-features=PasswordManager");
             options.addArguments("--start-maximized");
-            options.addArguments("--disable-notifications");
-            options.addArguments("--disable-popup-blocking");
             options.addArguments("--remote-allow-origins=*");
+            options.addArguments("--disable-notifications");
 
             WebDriver instance = new ChromeDriver(options);
             instance.manage().timeouts()
-                    .implicitlyWait(Duration.ofSeconds(5))
-                    .pageLoadTimeout(Duration.ofSeconds(15));
+                    .implicitlyWait(Duration.ofSeconds(10))
+                    .pageLoadTimeout(Duration.ofSeconds(30));
 
             threadLocalDriver.set(instance);
         }
