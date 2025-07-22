@@ -1,8 +1,6 @@
 package stepdefinitions;
 
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
+import io.cucumber.java.en.*;
 import org.openqa.selenium.WebDriver;
 import pages.LoginPage;
 import setup.DriverManager;
@@ -10,8 +8,13 @@ import static org.junit.Assert.*;
 
 public class LoginSteps {
 
-    private WebDriver driver = DriverManager.getDriver();
-    private LoginPage loginPage = new LoginPage(driver);
+    private WebDriver driver;
+    private LoginPage loginPage;
+
+    public LoginSteps() {
+        this.driver = DriverManager.getDriver();
+        this.loginPage = new LoginPage(driver);
+    }
 
     @Given("I am on the login page")
     public void i_am_on_the_login_page() {

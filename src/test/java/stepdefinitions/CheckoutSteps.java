@@ -10,16 +10,18 @@ import setup.DriverManager;
 import java.util.Map;
 
 public class CheckoutSteps {
-    private final WebDriver driver;
-    private final ProductsPage productsPage;
-    private final CartPage cartPage;
-    private final CheckoutPage checkoutPage;
+    private WebDriver driver;
+    private ProductsPage productsPage;
+    private CartPage cartPage;
+    private CheckoutPage checkoutPage;
 
     public CheckoutSteps() {
         this.driver = DriverManager.getDriver();
-        this.productsPage = new ProductsPage(driver);
-        this.cartPage = new CartPage(driver);
-        this.checkoutPage = new CheckoutPage(driver);
+        if(driver != null) {
+            this.productsPage = new ProductsPage(driver);
+            this.cartPage = new CartPage(driver);
+            this.checkoutPage = new CheckoutPage(driver);
+        }
     }
 
     @When("I add product {string} to cart")
