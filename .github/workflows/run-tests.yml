@@ -1,10 +1,16 @@
-name: Run Cucumber Tests
+name: Run Selenium Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
     steps:
     - uses: actions/checkout@v4
     
@@ -22,9 +28,26 @@ jobs:
     - name: Run Tests
       run: |
         export DISPLAY=:99
-        Xvfb :99 -screen 0 1920x1080x24 &
+        Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
         
         mvn -B clean test \
           -Dheadless=true \
           -Dwebdriver.chrome.driver=$(which chromedriver) \
-          -Dcucumber.plugin="html:target/cucumber-reports.html,json:target/cucumber.json"
+          -Dchrome.switches="--window-size=1920,1080 --force-device-scale-factor=1" \
+          -Dcucumber.plugin="html:target/cucumber-reports.html,json:target/cucumber.json" \
+          -Ddisable.popups=true
+
+        # Gera relatório de falhas
+        if [ -d "target/surefire-reports" ]; then
+            cat target/surefire-reports/*.txt || true
+        fi
+
+    - name: Upload Reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-reports
+        path: |
+          target/cucumber-reports.html
+          target/cucumber.json
+          target/screenshots/
