@@ -13,7 +13,7 @@ import io.cucumber.junit.CucumberOptions;
                 "junit:target/cucumber.xml"
         },
         features = "src/test/resources/features",
-        glue = "stepdefinitions"
+        glue = {"stepdefinitions", "hooks"}
 )
 public class TestRunner {
 }
