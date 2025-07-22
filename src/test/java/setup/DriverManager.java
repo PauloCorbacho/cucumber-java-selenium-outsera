@@ -8,9 +8,10 @@ import java.time.Duration;
 
 public class DriverManager {
     private static WebDriver driver;
+    private static final ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<>();
 
     public static WebDriver getDriver() {
-        if (driver == null) {
+        if (threadLocalDriver.get() == null) {
             WebDriverManager.chromedriver().setup();
 
             ChromeOptions options = new ChromeOptions();
@@ -20,12 +21,41 @@ public class DriverManager {
             options.addArguments("--disable-notifications");
             options.addArguments("--disable-popup-blocking");
             options.addArguments("--remote-allow-origins=*");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--no-sandbox");
 
-            driver = new ChromeDriver(options);
-            driver.manage().timeouts()
+            WebDriver instance = new ChromeDriver(options);
+            instance.manage().timeouts()
                     .implicitlyWait(Duration.ofSeconds(5))
                     .pageLoadTimeout(Duration.ofSeconds(15));
+
+            threadLocalDriver.set(instance);
         }
-        return driver;
+        return threadLocalDriver.get();
+    }
+
+    public static void quitDriver() {
+        WebDriver driver = threadLocalDriver.get();
+        if (driver != null) {
+            try {
+                driver.quit();
+            } catch (Exception e) {
+                System.err.println("Error while closing the browser: " + e.getMessage());
+            } finally {
+                threadLocalDriver.remove();
+            }
+        }
+    }
+
+    public static void setup() {
+        getDriver();
+    }
+
+    public static void teardown() {
+        quitDriver();
+    }
+
+    public static void closeAllDrivers() {
+        quitDriver();
     }
 }
