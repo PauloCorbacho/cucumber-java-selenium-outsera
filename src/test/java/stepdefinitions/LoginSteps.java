@@ -12,8 +12,12 @@ public class LoginSteps {
     private LoginPage loginPage;
 
     public LoginSteps() {
-        this.driver = DriverManager.getDriver();
-        this.loginPage = new LoginPage(driver);
+        try {
+            this.driver = DriverManager.getDriver();
+            this.loginPage = new LoginPage(driver);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize LoginSteps: " + e.getMessage(), e);
+        }
     }
 
     @Given("I am on the login page")

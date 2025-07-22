@@ -7,7 +7,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import java.time.Duration;
 
 public class DriverManager {
-    private static WebDriver driver;
     private static final ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<>();
 
     public static WebDriver getDriver() {
@@ -15,14 +14,20 @@ public class DriverManager {
             WebDriverManager.chromedriver().setup();
 
             ChromeOptions options = new ChromeOptions();
+
+            if (Boolean.getBoolean("headless")) {
+                options.addArguments("--headless=new");
+                options.addArguments("--disable-gpu");
+                options.addArguments("--no-sandbox");
+                options.addArguments("--disable-dev-shm-usage");
+            }
+
             options.addArguments("--password-store=basic");
             options.addArguments("--disable-features=PasswordManager");
             options.addArguments("--start-maximized");
             options.addArguments("--disable-notifications");
             options.addArguments("--disable-popup-blocking");
             options.addArguments("--remote-allow-origins=*");
-            options.addArguments("--disable-dev-shm-usage");
-            options.addArguments("--no-sandbox");
 
             WebDriver instance = new ChromeDriver(options);
             instance.manage().timeouts()
