@@ -34,7 +34,11 @@ mvn clean verify
 
 3. Execution Options:
 - Run specific feature:
-mvn test -Dcucumber.filter.tags="@login"
+# Smoke tests only
+mvn test -Psmoke
+
+# Login tests only
+mvn test -Plogin
 
 - Run in headless mode:
 mvn test -Dheadless=true
